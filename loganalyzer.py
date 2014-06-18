@@ -18,7 +18,9 @@ class LogAnalyzer():
         self.mavgraphOptions = "--flightmode=px4"
         self.plots = {"Altitude": "GPS.Alt SENS.BaroAlt GPOS.Alt GPSP.Alt",
                       "Roll": "ATT.Roll ATSP.RollSP",
-                      "Pitch": "ATT.Pitch ATSP.PitchSP"}
+                      "Pitch": "ATT.Pitch ATSP.PitchSP",
+                      "Lat": "GPS.Lat GPOS.Lat GPSP.Lat",
+                      "Lon": "GPS.Lon GPOS.Lon GPSP.Lon"}
 
     def generatePlots(self, filename, dirname):
         """produce plots for filename in dirname"""
