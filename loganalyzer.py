@@ -2,6 +2,9 @@
 import argparse
 import os
 import subprocess
+__author__ = "Thomas Gubler"
+__license__ = "BSD"
+__email__ = "thomasgubler@gmail.com"
 
 
 class LogAnalyzer():
@@ -12,17 +15,24 @@ class LogAnalyzer():
         self.filenames = filenames
         self.mavgraph = "~/src/mavlink/pymavlink/tools/mavgraph.py"
         self.plots = {"Altitude": "GPS.Alt SENS.BaroAlt GPOS.Alt GPSP.Alt",
-                      "Roll": "ATT.Roll ATSP.RollSP"}
+                      "Roll": "ATT.Roll ATSP.RollSP",
+                      "Pitch": "ATT.Pitch ATSP.PitchSP"}
 
     def generatePlots(self, filename, dirname):
         """produce plots for filename in dirname"""
         print(' '.join(["Analyzing ", filename]))
 
+        processes = []
         for plotTitle, plotFields in self.plots.iteritems():
             plotFileName = ''.join([filename, '_', plotTitle, ".png"])
             output = "--output=" + dirname + "/" + plotFileName
-            subprocess.Popen(' '.join(["python2", self.mavgraph, output,
-                                      plotFields, filename]), shell=True)
+            cmd = ' '.join(["python2", self.mavgraph, output,
+                            plotFields, filename])
+            processes.append(subprocess.Popen(cmd, shell=True))
+
+        # wait for the mavgraph processes to finish before continuing
+        for p in processes:
+            p.wait()
 
     def createOutputdir(self, filename):
         """Creates the output directory given the filename"""
