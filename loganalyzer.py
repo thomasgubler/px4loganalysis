@@ -10,9 +10,10 @@ __email__ = "thomasgubler@gmail.com"
 class LogAnalyzer():
     """A class that helps anaylze logs"""
 
-    def __init__(self, filenames):
+    def __init__(self, args):
         """Constructor"""
-        self.filenames = filenames
+        self.filenames = args.filenames
+        self.legendCmd = ''.join(["--legend=\"", args.legend, '\"'])
         self.mavgraph = "~/src/mavlink/pymavlink/tools/mavgraph.py"
         self.mavgraphOptions = "--flightmode=px4"
         self.plots = {"Altitude": "GPS.Alt SENS.BaroAlt GPOS.Alt GPSP.Alt",
@@ -28,7 +29,7 @@ class LogAnalyzer():
             plotFileName = ''.join([filename, '_', plotTitle, ".png"])
             output = ''.join(["--output=", dirname, "/", plotFileName])
             cmd = ' '.join(["python2", self.mavgraph, self.mavgraphOptions,
-                            output, plotFields, filename])
+                            self.legendCmd, output, plotFields, filename])
             processes.append(subprocess.Popen(cmd, shell=True))
 
         # wait for the mavgraph processes to finish before continuing
@@ -58,10 +59,12 @@ class LogAnalyzer():
 if __name__ == '__main__':
     # parse command line arguments
     parser = argparse.ArgumentParser(description='Log analyzation tool')
+    parser.add_argument('--legend', dest='legend', default='', action='store',
+                        help='legend position (matplotlib)')
     parser.add_argument(dest='filenames', default='', action='store',
                         help='Filenames of logfiles', nargs='+')
 
     args = parser.parse_args()
 
-    analyzer = LogAnalyzer(args.filenames)
+    analyzer = LogAnalyzer(args)
     analyzer.analyze()
