@@ -14,6 +14,7 @@ class LogAnalyzer():
         """Constructor"""
         self.filenames = filenames
         self.mavgraph = "~/src/mavlink/pymavlink/tools/mavgraph.py"
+        self.mavgraphOptions = "--flightmode=px4"
         self.plots = {"Altitude": "GPS.Alt SENS.BaroAlt GPOS.Alt GPSP.Alt",
                       "Roll": "ATT.Roll ATSP.RollSP",
                       "Pitch": "ATT.Pitch ATSP.PitchSP"}
@@ -25,9 +26,9 @@ class LogAnalyzer():
         processes = []
         for plotTitle, plotFields in self.plots.iteritems():
             plotFileName = ''.join([filename, '_', plotTitle, ".png"])
-            output = "--output=" + dirname + "/" + plotFileName
-            cmd = ' '.join(["python2", self.mavgraph, output,
-                            plotFields, filename])
+            output = ''.join(["--output=", dirname, "/", plotFileName])
+            cmd = ' '.join(["python2", self.mavgraph, self.mavgraphOptions,
+                            output, plotFields, filename])
             processes.append(subprocess.Popen(cmd, shell=True))
 
         # wait for the mavgraph processes to finish before continuing
