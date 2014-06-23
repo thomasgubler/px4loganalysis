@@ -13,10 +13,17 @@ class LogAnalyzer():
     def __init__(self, args):
         """Constructor"""
         self.filenames = args.filenames
-        self.legendCmd = ''.join(["--legend=\"", args.legend, '\"'])
+        if args.legend:
+            self.legendCmd = ''.join(["--legend=\"", args.legend, '\"'])
+        else:
+            self.legendCmd = ''
         self.mavgraph = "~/src/mavlink/pymavlink/tools/mavgraph.py"
         self.mavgraphOptions = "--flightmode=px4"
-        self.plots = {"Altitude": "GPS.Alt SENS.BaroAlt GPOS.Alt GPSP.Alt",
+        self.plots = {"Altitude_Thrust":
+                      ("GPS.Alt SENS.BaroAlt GPOS.Alt GPSP.Alt "
+                       "500.0+10.0*ATSP.ThrustSP"),
+                      "Altitude": ("GPS.Alt SENS.BaroAlt GPOS.Alt GPSP.Alt "
+                                   "SENS.BaroAlt"),
                       "Roll": "ATT.Roll ATSP.RollSP",
                       "Pitch": "ATT.Pitch ATSP.PitchSP",
                       "Lat": "GPS.Lat GPOS.Lat GPSP.Lat",
@@ -61,7 +68,7 @@ class LogAnalyzer():
 if __name__ == '__main__':
     # parse command line arguments
     parser = argparse.ArgumentParser(description='Log analyzation tool')
-    parser.add_argument('--legend', dest='legend', default='', action='store',
+    parser.add_argument('--legend', dest='legend', default='lower right', action='store',
                         help='legend position (matplotlib)')
     parser.add_argument(dest='filenames', default='', action='store',
                         help='Filenames of logfiles', nargs='+')
