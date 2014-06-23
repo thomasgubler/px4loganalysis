@@ -68,8 +68,8 @@ class LogAnalyzer():
 if __name__ == '__main__':
     # parse command line arguments
     parser = argparse.ArgumentParser(description='Log analyzation tool')
-    parser.add_argument('--legend', dest='legend', default='lower right', action='store',
-                        help='legend position (matplotlib)')
+    parser.add_argument('--legend', dest='legend', default='lower right',
+                        action='store', help='legend position (matplotlib)')
     parser.add_argument(dest='filenames', default='', action='store',
                         help='Filenames of logfiles', nargs='+')
 
