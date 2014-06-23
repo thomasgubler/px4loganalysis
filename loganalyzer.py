@@ -34,7 +34,7 @@ class LogAnalyzer():
         print(' '.join(["Analyzing ", filename]))
 
         processes = []
-        for plotTitle, plotFields in self.plots.iteritems():
+        for plotTitle, plotFields in self.plots.items():
             plotFileName = ''.join([filename, '_', plotTitle, ".png"])
             output = ''.join(["--output=", dirname, "/", plotFileName])
             cmd = ' '.join(["python2", self.mavgraph, self.mavgraphOptions,
