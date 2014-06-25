@@ -27,7 +27,8 @@ class LogAnalyzer():
                       "Roll": "ATT.Roll ATSP.RollSP",
                       "Pitch": "ATT.Pitch ATSP.PitchSP",
                       "Lat": "GPS.Lat GPOS.Lat GPSP.Lat",
-                      "Lon": "GPS.Lon GPOS.Lon GPSP.Lon"}
+                      "Lon": "GPS.Lon GPOS.Lon GPSP.Lon",
+                      "Estimator_status": "EST0.nStat EST0.fNaN EST0.fHealth EST0.fTOut"}
 
     def generatePlots(self, filename, dirname):
         """produce plots for filename in dirname"""
