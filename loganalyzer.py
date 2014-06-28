@@ -28,7 +28,17 @@ class LogAnalyzer():
                       "Pitch": "ATT.Pitch ATSP.PitchSP",
                       "Lat": "GPS.Lat GPOS.Lat GPSP.Lat",
                       "Lon": "GPS.Lon GPOS.Lon GPSP.Lon",
-                      "Estimator_status": "EST0.nStat EST0.fNaN EST0.fHealth EST0.fTOut"}
+                      "Estimator_status": ("EST0.nStat EST0.fNaN EST0.fHealth "
+                                           "EST0.fTOut"),
+                      "TECS_Outer_Loop": ("TECS.AltSP TECS.Alt "
+                                          " 100.0*TECS.FpaSP"
+                                          " 100.0*TECS.Fpa 10.0*TECS.AsSP"
+                                          " 10.0*TECS.As"
+                                          " 10.0*TECS.AsF 10.0*TECS.AsDSP"
+                                          " 10.0*TECS.AsD 100.0*ATSP.ThrustSP"
+                                          " 180.0/pi*ATSP.PitchSP"),
+                      "TECS_Inner_Loop": ("TECS.TERSP TECS.TER TECS.EDRSP "
+                                          "TECS.EDR TECS.M")}
 
     def generatePlots(self, filename, dirname):
         """produce plots for filename in dirname"""
@@ -69,7 +79,7 @@ class LogAnalyzer():
 if __name__ == '__main__':
     # parse command line arguments
     parser = argparse.ArgumentParser(description='Log analyzation tool')
-    parser.add_argument('--legend', dest='legend', default='lower right',
+    parser.add_argument('--legend', dest='legend', default='best',
                         action='store', help='legend position (matplotlib)')
     parser.add_argument(dest='filenames', default='', action='store',
                         help='Filenames of logfiles', nargs='+')
