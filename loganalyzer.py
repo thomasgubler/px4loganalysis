@@ -30,9 +30,10 @@ class LogAnalyzer():
                       "Lon": "GPS.Lon GPOS.Lon GPSP.Lon",
                       "Estimator_status": ("EST0.nStat EST0.fNaN EST0.fHealth "
                                            "EST0.fTOut"),
-                      "TECS_Outer_Loop": ("TECS.AltSP TECS.Alt "
-                                          " 100.0*TECS.FpaSP"
-                                          " 100.0*TECS.Fpa 10.0*TECS.AsSP"
+                      "TECS_Outer_Loop": ("TECS.ASP TECS.A TECS.AF "
+                                          " 100.0*TECS.FSP"
+                                          " 100.0*TECS.F 100.0*TECS.FF"
+                                          " 10.0*TECS.AsSP"
                                           " 10.0*TECS.As"
                                           " 10.0*TECS.AsF 10.0*TECS.AsDSP"
                                           " 10.0*TECS.AsD 100.0*ATSP.ThrustSP"
