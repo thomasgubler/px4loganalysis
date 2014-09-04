@@ -19,27 +19,34 @@ class LogAnalyzer():
             self.legendCmd = ''
         self.mavgraph = "~/src/mavlink/pymavlink/tools/mavgraph.py"
         self.mavgraphOptions = "--flightmode=px4"
-        self.plots = {"Altitude_Thrust":
-                      ("GPS.Alt SENS.BaroAlt GPOS.Alt GPSP.Alt "
-                       "500.0+10.0*ATSP.ThrustSP"),
-                      "Altitude": ("GPS.Alt SENS.BaroAlt GPOS.Alt GPSP.Alt "
-                                   "SENS.BaroAlt"),
-                      "Roll": "ATT.Roll ATSP.RollSP",
-                      "Pitch": "ATT.Pitch ATSP.PitchSP",
-                      "Lat": "GPS.Lat GPOS.Lat GPSP.Lat",
-                      "Lon": "GPS.Lon GPOS.Lon GPSP.Lon",
-                      "Estimator_status": ("EST0.nStat EST0.fNaN EST0.fHealth "
-                                           "EST0.fTOut"),
-                      "TECS_Outer_Loop": ("TECS.ASP TECS.A TECS.AF "
-                                          " 100.0*TECS.FSP"
-                                          " 100.0*TECS.F 100.0*TECS.FF"
-                                          " 10.0*TECS.AsSP"
-                                          " 10.0*TECS.As"
-                                          " 10.0*TECS.AsF 10.0*TECS.AsDSP"
-                                          " 10.0*TECS.AsD 100.0*ATSP.ThrustSP"
-                                          " 180.0/pi*ATSP.PitchSP"),
-                      "TECS_Inner_Loop": ("TECS.TERSP TECS.TER TECS.EDRSP "
-                                          "TECS.EDR TECS.M")}
+        self.plots = {}
+        #self.plots["Altitude_Thrust"] = ("GPS.Alt SENS.BaroAlt GPOS.Alt GPSP.Alt "
+                       #"500.0+10.0*ATSP.ThrustSP")
+        #self.plots["Altitude"] = ("GPS.Alt SENS.BaroAlt GPOS.Alt GPSP.Alt "
+                                #"SENS.BaroAlt")
+        #self.plots["Roll"] = "ATT.Roll ATSP.RollSP"
+        #self.plots["Pitch"] =  "ATT.Pitch ATSP.PitchSP"
+        #self.plots["Lat"] = "GPS.Lat GPOS.Lat GPSP.Lat"
+        #self.plots["Lon"] = "GPS.Lon GPOS.Lon GPSP.Lon"
+        #self.plots["Estimator_status"] = ("EST0.nStat EST0.fNaN EST0.fHealth "
+                                           #"EST0.fTOut")
+        #self.plots["TECS_Outer_Loop"] = ("TECS.ASP TECS.A TECS.AF "
+                                          #" 100.0*TECS.FSP"
+                                          #" 100.0*TECS.F 100.0*TECS.FF"
+                                          #" 10.0*TECS.AsSP"
+                                          #" 10.0*TECS.As"
+                                          #" 10.0*TECS.AsF 10.0*TECS.AsDSP"
+                                          #" 10.0*TECS.AsD 100.0*ATSP.ThrustSP"
+                                          #" 180.0/pi*ATSP.PitchSP")
+        #self.plots["TECS_Inner_Loop"] = ("TECS.TERSP TECS.TER TECS.EDRSP "
+                                          #"TECS.EDR TECS.M")
+        #self.plots["Landing"] = ("GPOS.Alt GPSP.Alt TECS.AF "
+                                  #"TECS.ASP GPOS.TALT 'GPOS.TALT + 4.0' "
+                                 #"'GPOS.Alt-DIST.Bottom'")
+        engineFailure = "'ATTC.Thrust>0.5 and BATT.C/ATTC.Thrust<5'"
+        self.plots["Motor"] = ("'40.0*ATTC.Thrust' BATT.C " + engineFailure)
+        self.plots["Motor2"] = ("'0.1*BATT.C/ATTC.Thrust' ATTC.Thrust "
+                                + engineFailure)
 
     def generatePlots(self, filename, dirname):
         """produce plots for filename in dirname"""
@@ -48,7 +55,10 @@ class LogAnalyzer():
         processes = []
         for plotTitle, plotFields in self.plots.items():
             plotFileName = ''.join([filename, '_', plotTitle, ".png"])
-            output = ''.join(["--output=", dirname, "/", plotFileName])
+            if args.showgui:
+                output = ''
+            else:
+                output = ''.join(["--output=", dirname, "/", plotFileName])
             cmd = ' '.join(["python2", self.mavgraph, self.mavgraphOptions,
                             self.legendCmd, output, plotFields, filename])
             processes.append(subprocess.Popen(cmd, shell=True))
@@ -82,6 +92,8 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Log analyzation tool')
     parser.add_argument('--legend', dest='legend', default='best',
                         action='store', help='legend position (matplotlib)')
+    parser.add_argument('--gui', dest='showgui', default=False,
+                        action='store_true', help='show gui plot')
     parser.add_argument(dest='filenames', default='', action='store',
                         help='Filenames of logfiles', nargs='+')
 
